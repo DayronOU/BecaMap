@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BecaMap — Directorio de becas para estudiantes peruanos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #c0392b; --red-light: #f9e8e7; --red-mid: #e88a82;
+    --gold: #d4a017;
+    --dark: #1a1a2e; --mid: #6b6b80; --border: #e2ddd6; --bg: #f7f5f0; --white: #fff;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
+  nav { background: rgba(247,245,240,0.97); border-bottom: 0.5px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--dark); }
+  .logo span { color: var(--red); }
+  .nav-tag { font-size: 0.75rem; color: var(--mid); font-weight: 300; }
+  .hero { background: var(--white); border-bottom: 0.5px solid var(--border); padding: 64px 32px 48px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%; background: var(--red); opacity: 0.05; top: -200px; left: -100px; pointer-events: none; }
+  .hero::after { content: ''; position: absolute; width: 300px; height: 300px; border-radius: 50%; background: var(--gold); opacity: 0.06; bottom: -150px; right: -60px; pointer-events: none; }
+  .hero-inner { position: relative; max-width: 640px; margin: 0 auto; }
+  .pill { display: inline-block; background: var(--red-light); color: var(--red); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; margin-bottom: 20px; }
+  h1 { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; line-height: 1.05; color: var(--dark); margin-bottom: 16px; letter-spacing: -1px; }
+  h1 em { font-style: italic; color: var(--red); }
+  .hero-desc { font-size: 0.95rem; color: var(--mid); max-width: 460px; margin: 0 auto 28px; font-weight: 300; line-height: 1.75; }
+  .hero-btn { display: inline-block; background: var(--red); color: var(--white); font-size: 0.88rem; font-weight: 600; padding: 13px 28px; border-radius: 99px; text-decoration: none; transition: opacity 0.2s; }
+  .hero-btn:hover { opacity: 0.88; }
+  .stats { display: flex; align-items: center; justify-content: center; gap: 32px; margin-top: 44px; padding-top: 28px; border-top: 0.5px solid var(--border); }
+  .stat { text-align: center; }
+  .stat-num { display: block; font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--dark); line-height: 1; }
+  .stat-lbl { display: block; font-size: 0.65rem; color: var(--mid); margin-top: 4px; letter-spacing: 0.07em; text-transform: uppercase; }
+  .stat-div { width: 1px; height: 32px; background: var(--border); }
+  .search-sec { padding: 40px 32px 20px; max-width: 1040px; margin: 0 auto; }
+  .sec-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 18px; }
+  .searchbar { position: relative; margin-bottom: 16px; }
+  .searchbar input { width: 100%; padding: 14px 18px 14px 46px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; border: 1.5px solid var(--border); border-radius: 12px; background: var(--white); color: var(--dark); outline: none; transition: border-color 0.2s; }
+  .searchbar input:focus { border-color: var(--red); }
+  .search-ico { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--mid); font-size: 15px; pointer-events: none; }
+  .filters { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 12px; align-items: end; }
+  .fg label { font-size: 0.65rem; font-weight: 600; color: var(--mid); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px; }
+  .fg select { width: 100%; padding: 9px 12px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; border: 1.5px solid var(--border); border-radius: 9px; background: var(--white); color: var(--dark); outline: none; cursor: pointer; transition: border-color 0.2s; }
+  .fg select:focus { border-color: var(--red); }
+  .btn-reset { padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; background: transparent; color: var(--mid); border: 1.5px solid var(--border); border-radius: 9px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+  .results-sec { padding: 0 32px 60px; max-width: 1040px; margin: 0 auto; }
+  .count { font-size: 0.8rem; color: var(--mid); margin-bottom: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .empty { grid-column: 1/-1; text-align: center; padding: 48px; color: var(--mid); font-size: 0.9rem; }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.2s, transform 0.2s; }
+  .card:hover { box-shadow: 0 4px 20px rgba(192,57,43,0.08); transform: translateY(-2px); }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .card-title { font-size: 0.96rem; font-weight: 600; color: var(--dark); line-height: 1.35; }
+  .badge { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+  .b-pre { background: #e8f4fd; color: #1a6fa8; }
+  .b-pos { background: #edf7ed; color: #2e7d32; }
+  .b-tec { background: #fff8e1; color: #b07d00; }
+  .b-int { background: #f0eaff; color: #6d3fcf; }
+  .card-desc { font-size: 0.82rem; color: var(--mid); line-height: 1.65; font-weight: 300; }
+  .reqs-label { font-size: 0.64rem; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .reqs { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .reqs li { font-size: 0.79rem; color: var(--dark); padding-left: 16px; position: relative; line-height: 1.4; }
+  .reqs li::before { content: "✓"; position: absolute; left: 0; color: var(--red); font-size: 0.7rem; font-weight: 700; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { font-size: 0.66rem; background: var(--bg); color: var(--mid); border: 0.5px solid var(--border); border-radius: 99px; padding: 3px 9px; font-weight: 500; }
+  .card-contact { display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 0.5px solid var(--border); }
+  .card-contact a { font-size: 0.77rem; color: var(--red); text-decoration: none; font-weight: 500; word-break: break-all; }
+  .card-contact a:hover { text-decoration: underline; }
+  .card-link { font-size: 0.77rem; color: var(--red); font-weight: 500; text-decoration: none; margin-top: auto; }
+  .card-link:hover { text-decoration: underline; }
+  footer { background: var(--dark); padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: rgba(255,255,255,0.9); }
+  .footer-logo span { color: var(--red-mid); }
+  .footer-txt { font-size: 0.73rem; color: rgba(255,255,255,0.4); }
+  @media (max-width: 768px) {
+    h1 { font-size: 2.1rem; }
+    .filters { grid-template-columns: 1fr 1fr; }
+    .btn-reset { grid-column: 1/-1; }
+    .grid { grid-template-columns: 1fr; }
+    .stats { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Beca<span>Map</span></div>
+  <span class="nav-tag">Becas para estudiantes peruanos</span>
+</nav>
+<header class="hero">
+  <div class="hero-inner">
+    <p class="pill">🇵🇪 Directorio de becas para peruanos</p>
+    <h1>Tu futuro<br><em>empieza aquí.</em></h1>
+    <p class="hero-desc">BecaMap te ayuda a encontrar becas y financiamientos educativos adaptados a tu situación — en Perú y en el extranjero — sin complicaciones.</p>
+    <a href="#buscar" class="hero-btn">Explorar becas →</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat-num" id="total-count">20</span><span class="stat-lbl">Becas listadas</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">Gratuito</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-num">🌎</span><span class="stat-lbl">Perú y extranjero</span></div>
+  </div>
+</header>
+<section class="search-sec" id="buscar">
+  <h2 class="sec-title">Busca tu beca ideal</h2>
+  <div class="searchbar">
+    <span class="search-ico">🔍</span>
+    <input type="text" id="search-input" placeholder="Busca por nombre, carrera o institución..." oninput="filterBecas()">
+  </div>
+  <div class="filters">
+    <div class="fg"><label>Nivel académico</label>
+      <select id="f-nivel" onchange="filterBecas()">
+        <option value="">Todos</option>
+        <option value="Pregrado">Pregrado</option>
+        <option value="Posgrado">Posgrado</option>
+        <option value="Técnico">Técnico</option>
+        <option value="Intercambio">Intercambio</option>
+      </select>
+    </div>
+    <div class="fg"><label>Destino</label>
+      <select id="f-destino" onchange="filterBecas()">
+        <option value="">Todos</option>
+        <option value="peru">Solo Perú</option>
+        <option value="lima">Lima</option>
+        <option value="extranjero">Extranjero</option>
+      </select>
+    </div>
+    <div class="fg"><label>Inglés requerido</label>
+      <select id="f-ingles" onchange="filterBecas()">
+        <option value="">Cualquier nivel</option>
+        <option value="no">No requiere inglés</option>
+        <option value="basico">Básico</option>
+        <option value="intermedio">Intermedio</option>
+        <option value="avanzado">Avanzado (B2+)</option>
+      </select>
+    </div>
+    <div class="fg"><label>Cobertura</label>
+      <select id="f-cobertura" onchange="filterBecas()">
+        <option value="">Todas</option>
+        <option value="completa">Beca completa</option>
+        <option value="parcial">Beca parcial</option>
+      </select>
+    </div>
+    <button class="btn-reset" onclick="resetFilters()">Limpiar</button>
+  </div>
+</section>
+<section class="results-sec">
+  <p class="count" id="result-count">20 becas encontradas</p>
+  <div class="grid" id="grid"></div>
+</section>
+<footer>
+  <div class="footer-logo">Beca<span>Map</span></div>
+  <p class="footer-txt">Hecho para estudiantes peruanos · 2026 · Actualizado mensualmente</p>
+</footer>
+<script>
+const BECAS=[{id:1,titulo:"Beca 18 – Educación Superior",nivel:"Pregrado",destino:"peru",ingles:"no",cobertura:"completa",desc:"Financia carrera completa para jóvenes en situación de pobreza con alto rendimiento académico. Cubre matrícula, pensión, alimentación y transporte.",reqs:["Clasificación SISFOH (pobreza extrema o pobreza)","Haber culminado 5to de secundaria con buen rendimiento","Residencia en Perú"],tags:["📍 Nacional","💰 Bajos recursos","💼 Todas las carreras"],contacto:"atencionalciudadano@pronabec.gob.pe",link:"https://www.pronabec.gob.pe"},{id:2,titulo:"Beca CONCYTEC – Ciencia y Tecnología",nivel:"Posgrado",destino:"extranjero",ingles:"avanzado",cobertura:"completa",desc:"Financia maestrías y doctorados en universidades del exterior para investigadores y profesionales peruanos en ciencias e ingeniería.",reqs:["Título universitario peruano","Dominio del idioma del país destino","Carta de aceptación de universidad extranjera","Experiencia en investigación"],tags:["📍 Internacional","💼 Ciencias e Ingeniería","🎓 Maestría / Doctorado"],contacto:"becas@concytec.gob.pe",link:"https://www.concytec.gob.pe"},{id:3,titulo:"Beca Mujeres en Tecnología – Laboratoria",nivel:"Técnico",destino:"lima",ingles:"no",cobertura:"completa",desc:"Bootcamp intensivo de programación web para mujeres sin experiencia técnica. Modelo de pago diferido: pagas solo si consigues trabajo.",reqs:["Ser mujer mayor de 18 años","Secundaria completa","Disponibilidad completa por 6 meses","Pasar proceso de selección"],tags:["📍 Lima","💼 Tecnología","👩 Solo mujeres"],contacto:"admisiones@laboratoria.la",link:"https://www.laboratoria.la"},{id:4,titulo:"Fulbright – Becas para Peruanos (USA)",nivel:"Posgrado",destino:"extranjero",ingles:"avanzado",cobertura:"completa",desc:"Programa del gobierno de EE.UU. que financia estudios de posgrado en universidades americanas. Cubre matrícula, manutención, seguro médico y pasajes.",reqs:["Título universitario","TOEFL 80+ o IELTS 6.5+","Máximo 5 años de graduado","Experiencia profesional relevante"],tags:["📍 USA","💰 Cualquier nivel","🎓 Maestría / Doctorado"],contacto:"peru@fulbright.pe",link:"https://www.fulbright.pe"},{id:5,titulo:"Beca Santander – Movilidad Internacional",nivel:"Pregrado",destino:"extranjero",ingles:"intermedio",cobertura:"parcial",desc:"Financia intercambios académicos en universidades aliadas de Europa y América Latina. Cubre parte de los gastos de manutención durante el intercambio.",reqs:["Ser estudiante universitario activo","Promedio mínimo 14/20","Nivel B1 de inglés o idioma del destino","Postular a través de tu universidad"],tags:["📍 Europa / LATAM","💰 Cualquier nivel","💼 Todas las carreras"],contacto:"becas@santander.com.pe",link:"https://www.becas-santander.com"},{id:6,titulo:"DAAD – Becas Alemania",nivel:"Posgrado",destino:"extranjero",ingles:"intermedio",cobertura:"completa",desc:"El servicio de intercambio académico alemán ofrece becas para maestrías y doctorados en Alemania. Muchos programas son completamente en inglés.",reqs:["Título universitario con buen promedio","Inglés B2 o alemán A2+","Carta de motivación sólida","Dos cartas de recomendación"],tags:["📍 Alemania","💼 Todas las carreras","🎓 Maestría / Doctorado"],contacto:"info@daad.de",link:"https://www.daad.de/es"},{id:7,titulo:"Beca Pronabec – Beca Especial Docente",nivel:"Posgrado",destino:"peru",ingles:"no",cobertura:"completa",desc:"Financia estudios de maestría para docentes de educación básica pública que ejercen en zonas de pobreza o pobreza extrema.",reqs:["Ser docente de educación básica pública","Mínimo 2 años de ejercicio en zona de pobreza","Nombramiento vigente","Aprobación de prueba de selección"],tags:["📍 Nacional","👨‍🏫 Solo docentes","💰 Bajos recursos"],contacto:"atencionalciudadano@pronabec.gob.pe",link:"https://www.pronabec.gob.pe"},{id:8,titulo:"Erasmus+ – Intercambio Europa",nivel:"Intercambio",destino:"extranjero",ingles:"intermedio",cobertura:"parcial",desc:"Programa de la Unión Europea para movilidad estudiantil. Financia semestres de intercambio en universidades europeas con estipendio mensual.",reqs:["Ser estudiante universitario activo","Universidad peruana con convenio Erasmus","Nivel B2 en idioma del país destino","Promedio académico satisfactorio"],tags:["📍 Europa","💼 Todas las carreras","📅 Semestre / Año"],contacto:"erasmus@ec.europa.eu",link:"https://erasmus-plus.ec.europa.eu"},{id:9,titulo:"OEA – Becas para Estudios de Posgrado",nivel:"Posgrado",destino:"extranjero",ingles:"avanzado",cobertura:"completa",desc:"La Organización de Estados Americanos ofrece becas para posgrado en cualquier país miembro. Cobertura completa para ciudadanos de países en desarrollo.",reqs:["Ciudadanía peruana","Título universitario","Inglés avanzado o dominio del idioma del país destino","Carta de aceptación universitaria"],tags:["📍 Américas","💰 Cualquier nivel","🎓 Maestría / Doctorado"],contacto:"scholarships@oas.org",link:"https://www.oas.org/es/becas"},{id:10,titulo:"Chevening – Becas Reino Unido",nivel:"Posgrado",destino:"extranjero",ingles:"avanzado",cobertura:"completa",desc:"Programa del gobierno británico para futuros líderes. Financia una maestría completa en cualquier universidad del Reino Unido. Incluye pasajes, manutención y matrícula.",reqs:["2 años de experiencia laboral","IELTS 6.5 mínimo (7.0 recomendado)","Título universitario","Demostrar potencial de liderazgo"],tags:["📍 Reino Unido","💼 Todas las carreras","🎓 Maestría"],contacto:"peru.chevening@fcdo.gov.uk",link:"https://www.chevening.org"},{id:11,titulo:"Beca PUCP – Excelencia Académica",nivel:"Pregrado",destino:"lima",ingles:"no",cobertura:"parcial",desc:"La PUCP otorga becas de matrícula y pensión a estudiantes con excelencia académica demostrada en la educación secundaria.",reqs:["Tercio superior en secundaria","Ingreso por proceso regular de admisión","Situación socioeconómica evaluada","Residencia en Lima o traslado verificado"],tags:["📍 Lima","🎓 PUCP","💼 Todas las carreras"],contacto:"becas@pucp.edu.pe",link:"https://www.pucp.edu.pe/becas"},{id:12,titulo:"Australia Awards – Becas Australia",nivel:"Posgrado",destino:"extranjero",ingles:"avanzado",cobertura:"completa",desc:"El gobierno australiano financia maestrías y doctorados para ciudadanos de países en desarrollo. Énfasis en desarrollo sostenible y gestión pública.",reqs:["Título universitario","IELTS 6.5+","Mínimo 2 años de experiencia laboral","Retornar al país de origen tras la beca"],tags:["📍 Australia","💰 Cualquier nivel","🎓 Maestría / Doctorado"],contacto:"australiaawards.peru@dfat.gov.au",link:"https://www.australiaawards.gov.au"},{id:13,titulo:"Beca Pacífico – Universidad del Pacífico",nivel:"Pregrado",destino:"lima",ingles:"no",cobertura:"parcial",desc:"La Universidad del Pacífico ofrece becas de mérito y necesidad económica para carreras de negocios, economía y ciencias sociales.",reqs:["Alto rendimiento en secundaria","Superar proceso de admisión UP","Evaluación socioeconómica familiar","Mantener promedio mínimo 13/20"],tags:["📍 Lima","🎓 U. del Pacífico","💼 Negocios / Economía"],contacto:"becas@up.edu.pe",link:"https://www.up.edu.pe/becas"},{id:14,titulo:"VLIR-UOS – Becas Bélgica",nivel:"Posgrado",destino:"extranjero",ingles:"avanzado",cobertura:"completa",desc:"Becas de la cooperación belga para ciudadanos de países en desarrollo. Maestrías enfocadas en desarrollo sostenible, salud pública y tecnología.",reqs:["Ciudadanía de país en desarrollo (incluye Perú)","Título universitario con buen promedio","Inglés avanzado (B2+)","Residir en país de origen al postular"],tags:["📍 Bélgica","💼 Ciencias / Salud / Desarrollo","🎓 Maestría"],contacto:"scholarships@vliruos.be",link:"https://www.vliruos.be/es"},{id:15,titulo:"Beca del Bicentenario – Perú",nivel:"Pregrado",destino:"extranjero",ingles:"intermedio",cobertura:"completa",desc:"Beca del gobierno peruano para estudiar pregrado en universidades del extranjero rankeadas en el top 500 mundial. Para egresados de colegios públicos.",reqs:["Egresado de colegio público peruano","Quinto superior en secundaria","Idioma del país destino certificado","Máximo 22 años al postular"],tags:["📍 Internacional","💰 Colegios públicos","🎓 Pregrado completo"],contacto:"bicentenario@pronabec.gob.pe",link:"https://www.pronabec.gob.pe/beca-bicentenario"},{id:16,titulo:"Jóvenes en Acción – BID",nivel:"Técnico",destino:"peru",ingles:"no",cobertura:"parcial",desc:"Programa del Banco Interamericano de Desarrollo para capacitación técnica y laboral de jóvenes entre 16 y 29 años en situación de vulnerabilidad.",reqs:["16 a 29 años de edad","Situación de vulnerabilidad socioeconómica","Secundaria incompleta o completa","Residir en zona de cobertura del programa"],tags:["📍 Nacional","💰 Bajos recursos","💼 Formación laboral"],contacto:"jovenes@midis.gob.pe",link:"https://www.midis.gob.pe"},{id:17,titulo:"Beca Hubert H. Humphrey – USA",nivel:"Intercambio",destino:"extranjero",ingles:"avanzado",cobertura:"completa",desc:"Programa del gobierno de EE.UU. para profesionales con 5+ años de experiencia. Un año de desarrollo profesional en universidades americanas.",reqs:["5 años de experiencia profesional relevante","TOEFL 525+ o IELTS 6.0+","Inglés avanzado","Liderazgo demostrado en su campo"],tags:["📍 USA","💼 Todas las áreas","📅 1 año"],contacto:"peru@fulbright.pe",link:"https://www.humphreyfellowship.org"},{id:18,titulo:"Beca SENATI – Formación Técnica",nivel:"Técnico",destino:"peru",ingles:"no",cobertura:"parcial",desc:"SENATI ofrece becas para formación técnico-profesional en mecánica, electricidad, industria y tecnología. Orientado a jóvenes de bajos recursos.",reqs:["Secundaria completa","Situación socioeconómica de bajos recursos","Aprobar proceso de selección SENATI","Peruano residente en Perú"],tags:["📍 Nacional","💰 Bajos recursos","💼 Técnico / Industrial"],contacto:"informes@senati.edu.pe",link:"https://www.senati.edu.pe"},{id:19,titulo:"LASPAU – Harvard-affiliated Scholarships",nivel:"Posgrado",destino:"extranjero",ingles:"avanzado",cobertura:"completa",desc:"Programa afiliado a Harvard que financia posgrados en universidades norteamericanas para latinoamericanos con potencial de liderazgo académico.",reqs:["Título universitario con excelencia académica","TOEFL 100+ o IELTS 7.0+","Carta de aceptación universitaria","Demostrar liderazgo y potencial académico"],tags:["📍 USA / Canadá","💼 Todas las carreras","🎓 Maestría / Doctorado"],contacto:"laspau@harvard.edu",link:"https://www.laspau.harvard.edu"},{id:20,titulo:"Beca Colfuturo – Colombia / Internacional",nivel:"Posgrado",destino:"extranjero",ingles:"intermedio",cobertura:"parcial",desc:"Aunque es un programa colombiano, acepta latinoamericanos para posgrados en Colombia o el exterior con cofinanciación. Ideal para negocios y ciencias sociales.",reqs:["Título universitario","Carta de aceptación","Experiencia profesional 1+ año","Nivel de inglés según destino"],tags:["📍 Colombia / Internacional","💼 Todas las carreras"],contacto:"info@colfuturo.org",link:"https://www.colfuturo.org"}];
+function getBadge(n){if(n==='Pregrado')return 'b-pre';if(n==='Posgrado')return 'b-pos';if(n==='Técnico')return 'b-tec';return 'b-int';}
+function renderCard(b){return `<div class="card"><div class="card-top"><h3 class="card-title">${b.titulo}</h3><span class="badge ${getBadge(b.nivel)}">${b.nivel}</span></div><p class="card-desc">${b.desc}</p><div><p class="reqs-label">Requisitos principales</p><ul class="reqs">${b.reqs.map(r=>`<li>${r}</li>`).join('')}</ul></div><div class="tags">${b.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div><div class="card-contact"><span>✉</span><a href="mailto:${b.contacto}">${b.contacto}</a></div><a href="${b.link}" target="_blank" rel="noopener" class="card-link">Ver convocatoria oficial →</a></div>`;}
+function filterBecas(){const q=document.getElementById('search-input').value.toLowerCase();const nivel=document.getElementById('f-nivel').value;const destino=document.getElementById('f-destino').value;const ingles=document.getElementById('f-ingles').value;const cobertura=document.getElementById('f-cobertura').value;const f=BECAS.filter(b=>{const mQ=!q||b.titulo.toLowerCase().includes(q)||b.desc.toLowerCase().includes(q)||b.tags.some(t=>t.toLowerCase().includes(q));const mN=!nivel||b.nivel===nivel;const mD=!destino||b.destino===destino||(destino==='peru'&&(b.destino==='peru'||b.destino==='lima'));const mI=!ingles||b.ingles===ingles;const mC=!cobertura||b.cobertura===cobertura;return mQ&&mN&&mD&&mI&&mC;});const grid=document.getElementById('grid');document.getElementById('result-count').textContent=`${f.length} beca${f.length!==1?'s':''} encontrada${f.length!==1?'s':''}`;grid.innerHTML=f.length?f.map(renderCard).join(''):'<p class="empty">No se encontraron becas con esos filtros. Intenta con otros criterios.</p>';}
+function resetFilters(){document.getElementById('search-input').value='';['f-nivel','f-destino','f-ingles','f-cobertura'].forEach(id=>document.getElementById(id).value='');filterBecas();}
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('total-count').textContent=BECAS.length;filterBecas();});
+</script>
+</body>
+</html>
